@@ -1,0 +1,495 @@
+---
+import '../styles/global.css';
+import { GTM_ID, WHATSAPP, BRAND, UNITS, wa, SHOW_INSTAGRAM } from '../data/site.js';
+import { SERVICES, CASES, BRANDS, GALLERY, GALLERY_CATS, STEPS, REVIEWS, RATING, FAQS } from '../data/content.js';
+import feed from '../data/instagram.json';
+
+const posts = Array.isArray(feed?.posts) ? feed.posts.filter(p => p && p.image && p.permalink).slice(0, 8) : [];
+const IGN = SHOW_INSTAGRAM ? 1 : 0;
+const num = (n) => String(n + IGN).padStart(2, '0');
+const hasFeed = posts.length >= 4;
+
+const fmtDate = (iso) => {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return isNaN(d) ? '' : d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+};
+const truncate = (s, n) => (s && s.length > n ? s.slice(0, n).replace(/\s+\S*$/, '') + '…' : (s || ''));
+
+const title = 'Teto Solar e Tapeçaria Automotiva em Osasco e SP | Fallcar';
+const description = 'Conserto de teto solar, tapeçaria automotiva e higienização de interior em Osasco e São Paulo. Peça orçamento pelo WhatsApp.';
+
+const SITE = 'https://fallcar.com.br';
+const OG_IMAGE = SITE + '/img/og-share.jpg';
+const SERVICES_LD = SERVICES.map((s) => ({
+  '@type': 'Offer',
+  itemOffered: { '@type': 'Service', name: s.title, description: s.text, serviceType: s.title, provider: { '@id': SITE + '/#organization' } }
+}));
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': SITE + '/#website',
+      url: SITE + '/',
+      name: BRAND.name,
+      inLanguage: 'pt-BR',
+      publisher: { '@id': SITE + '/#organization' }
+    },
+    {
+      '@type': 'Organization',
+      '@id': SITE + '/#organization',
+      name: BRAND.name,
+      legalName: BRAND.legal,
+      url: SITE + '/',
+      logo: SITE + '/img/logo.svg',
+      image: OG_IMAGE,
+      sameAs: [BRAND.instagram, BRAND.facebook]
+    },
+    ...UNITS.map((u) => ({
+      '@type': 'AutoRepair',
+      '@id': SITE + '/#unidade-' + u.schema.city.toLowerCase().replace(/\s+/g, '-'),
+      name: BRAND.name + ' — ' + u.schema.city,
+      description: description,
+      url: SITE + '/',
+      telephone: u.schema.tel,
+      image: [OG_IMAGE],
+      logo: SITE + '/img/logo.svg',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: u.schema.street,
+        addressLocality: u.schema.city,
+        addressRegion: 'SP',
+        addressCountry: 'BR'
+      },
+      areaServed: { '@type': 'City', name: u.schema.city },
+      openingHoursSpecification: [
+        { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '08:00', closes: '18:00' }
+      ],
+      hasMap: u.route,
+      parentOrganization: { '@id': SITE + '/#organization' },
+      hasOfferCatalog: { '@type': 'OfferCatalog', name: 'Serviços', itemListElement: SERVICES_LD },
+      sameAs: [BRAND.instagram, BRAND.facebook]
+    })),
+    {
+      '@type': 'FAQPage',
+      mainEntity: FAQS.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a }
+      }))
+    }
+  ]
+};
+---
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Google Tag Manager: o mais alto possível no <head> (o <noscript> correspondente fica logo após <body>) -->
+  {GTM_ID && <script is:inline set:html={"(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','" + GTM_ID + "');"} />}
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="theme-color" content="#070a11" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="geo.region" content="BR-SP" />
+  <meta name="geo.placename" content="Osasco, São Paulo" />
+  <link rel="canonical" href={SITE + '/'} />
+  <link rel="alternate" hreflang="pt-BR" href={SITE + '/'} />
+  <link rel="alternate" hreflang="x-default" href={SITE + '/'} />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content={BRAND.name} />
+  <meta property="og:url" content={SITE + '/'} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={OG_IMAGE} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:alt" content="Fallcar: tapeçaria automotiva e teto solar em Osasco e São Paulo, com interior de Speedster em couro laranja" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={OG_IMAGE} />
+  <link rel="preload" as="image" href="/img/hero.webp" fetchpriority="high" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+</head>
+<body>
+{GTM_ID && <noscript><iframe src={"https://www.googletagmanager.com/ns.html?id=" + GTM_ID} height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>}
+<a class="skip" href="#conteudo">Vá para o conteúdo</a>
+
+<header class="site-header">
+  <div class="bar">
+    <a class="logo" href="#topo" aria-label="Fallcar — início">
+      <img src="/img/logo-dark.svg" width="1600" height="411" alt="Fallcar Tapeçaria e Teto Solar" onerror="this.remove()" />
+      <span>LOGO</span>
+    </a>
+    <nav class="nav" aria-label="Seções do site">
+      <a href="#servicos">Serviços</a>
+      <a href="#antes-depois">Antes e Depois</a>
+    <a href="#trabalhos">Trabalhos</a>
+      {SHOW_INSTAGRAM && <a href="#novidades">Novidades</a>}
+      <a href="#unidades">Unidades</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="header-actions">
+      <a class="header-tel" href="tel:+5511947820539" data-track="phone_click">(11) 94782-0539</a>
+      <div class="wa-menu" data-wa-menu>
+        <button type="button" class="btn btn--primary btn--sm wa-menu__btn" aria-haspopup="true" aria-expanded="false" aria-controls="wa-menu-list">WhatsApp <span aria-hidden="true">▾</span></button>
+        <ul class="wa-menu__list" id="wa-menu-list" hidden>
+          {UNITS.map((u) => (
+            <li><a href={wa('Olá, ' + u.contact + '! Vim pelo site e quero falar sobre meu carro.', u.whatsapp)} target="_blank" rel="noopener" data-track="whatsapp_click" data-origem={'header-' + u.slug}><b>{u.menuLabel}</b><small>{u.contact}</small></a></li>
+          ))}
+        </ul>
+      </div>
+      <button class="burger" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-nav">☰</button>
+    </div>
+  </div>
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Menu">
+    <a href="#servicos">Serviços</a>
+    <a href="#antes-depois">Antes e Depois</a>
+    <a href="#trabalhos">Trabalhos</a>
+    {SHOW_INSTAGRAM && <a href="#novidades">Novidades</a>}
+    <a href="#unidades">Unidades</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+</header>
+
+<main id="conteudo">
+  <span id="topo"></span>
+
+  <section aria-label="Início" style="border-bottom:1px solid var(--line)">
+    <div class="hero">
+      <div class="hero-copy">
+        <div class="hero-rule">
+          <span class="eyebrow">Tapeçaria e Teto Solar</span>
+          <i></i>
+          <span class="age">+30 anos</span>
+        </div>
+        <h1>Tapeçaria automotiva e <em>teto solar</em> em Osasco e São Paulo.</h1>
+        <p class="lead">Estofamento em couro, higienização de interior e conserto de teto solar (vazamento, travamento e ruído) com acabamento impecável. Com unidades em Osasco e Campos Elíseos.</p>
+        <div class="hero-ctas">
+          <a class="btn btn--primary" href={wa('Olá, Fallcar! Quero um orçamento. Posso mandar uma foto?')} target="_blank" rel="noopener" data-track="whatsapp_click" data-origem="hero">Fale no WhatsApp</a>
+          <a class="btn btn--ghost" href="tel:+5511947820539" data-track="phone_click">Ligue agora</a>
+        </div>
+        <div class="facts">
+          <div><b>+30 anos</b><small>De oficina</small></div>
+          <div><b>2 unidades</b><small>Osasco · SP</small></div>
+          <div><b>{RATING.score} ★</b><small>Google · {RATING.count} avaliações</small></div>
+        </div>
+      </div>
+      <div class="hero-photo">
+        <div class="ph" data-empty="Foto herói — interior de Speedster">
+          <img src="/img/hero.webp" alt="Profissional de avental, com os braços cruzados, ao lado de um carro preto na oficina" fetchpriority="high" width="900" height="1200" onerror="this.remove()" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="servicos" class="sec" data-reveal aria-labelledby="h-servicos">
+    <div class="shell">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow">01 — Serviços</div>
+          <h2 class="title" id="h-servicos">Teto solar, tapeçaria e higienização automotiva</h2>
+        </div>
+        <p>Mande uma foto pelo WhatsApp e informamos se tem conserto, quanto custa e quantos dias leva.</p>
+      </div>
+      <div class="grid-services">
+        {SERVICES.map((s) => (
+          <article class="service">
+            <div class="service-top">
+              <span class="service-n">{s.n}</span>
+              {s.badge && <span class="badge">{s.badge}</span>}
+            </div>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+            <div class="ph" data-empty={s.alt}>
+              {s.video
+                ? <video src={s.video} poster={s.image} muted loop playsinline autoplay preload="metadata" aria-label={s.alt} title={s.alt}></video>
+                : <img src={s.image} alt={s.alt} loading="lazy" width="600" height="360" onerror="this.remove()" />}
+            </div>
+            <a class="link-underline" aria-label={s.cta + " pelo WhatsApp"} href={wa(s.waMsg)} target="_blank" rel="noopener" data-track="whatsapp_click" data-origem={s.origem}>{s.cta} →</a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="antes-depois" class="sec sec--alt" data-reveal>
+    <div class="shell">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow">02 — Antes e depois</div>
+          <h2 class="title">Antes e depois de tapeçaria e higienização</h2>
+        </div>
+        <p>Trabalhos reais, feitos na nossa oficina.</p>
+      </div>
+      <div class="grid-cases">
+        {CASES.map((c) => (
+          <figure class="case">
+            <div class={'media media--' + c.kind}>
+              {c.kind === 'video' && (
+                <>
+                  <video src={c.src} poster={c.poster} muted loop playsinline autoplay preload="metadata" data-split={c.splitAt} aria-label={c.alt}></video>
+                  <span class="tag tag--a" data-vtag>Antes</span>
+                </>
+              )}
+              {c.kind === 'split' && (
+                <>
+                  <img src={c.image} alt={c.alt} loading="lazy" width="960" height="1280" />
+                  <span class={'tag ' + (c.afterSide === 'left' ? 'tag--b tag--l' : 'tag--a tag--l')}>{c.afterSide === 'left' ? 'Depois' : 'Antes'}</span>
+                  <span class={'tag ' + (c.afterSide === 'left' ? 'tag--a tag--r' : 'tag--b tag--r')}>{c.afterSide === 'left' ? 'Antes' : 'Depois'}</span>
+                </>
+              )}
+              {c.kind === 'pair' && (
+                <>
+                  <div class="half"><img src={c.before} alt={c.alt} loading="lazy" width="720" height="480" /><span class="tag tag--a tag--l">Antes</span></div>
+                  <div class="half"><img src={c.after} alt="" loading="lazy" width="720" height="480" /><span class="tag tag--b tag--l">Depois</span></div>
+                </>
+              )}
+            </div>
+            <figcaption><b>{c.title}</b><span>{c.meta}</span></figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="trabalhos" class="sec" data-reveal>
+    <div class="shell">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow">03 — Trabalhos</div>
+          <h2 class="title">Interiores automotivos feitos na Fallcar</h2>
+        </div>
+        <div class="chips" role="group" aria-label="Filtrar trabalhos">
+          <button type="button" class="chip" data-filter="all" aria-pressed="true">Todos</button>
+          {GALLERY_CATS.map((k) => <button type="button" class="chip" data-filter={k} aria-pressed="false">{k}</button>)}
+        </div>
+      </div>
+      <div class="gallery">
+        {GALLERY.map((g) => (
+          <figure class="shot" data-cat={g.cat}><img src={g.image} alt={g.alt + ', tapeçaria feita na Fallcar'} loading="lazy" width={g.w} height={g.h} /></figure>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section aria-label="Marcas atendidas" style="border-bottom:1px solid var(--line)">
+    <div class="shell brands">
+      <span class="label">Modelos que já atendemos</span>
+      {BRANDS.map((b) => <span>{b}</span>)}
+    </div>
+  </section>
+
+  <section aria-label="Como funciona" class="sec" data-reveal>
+    <div class="shell">
+      <div class="eyebrow">04 — Como funciona</div>
+      <h2 class="title" style="margin-bottom:44px">Como pedir orçamento: do celular à retirada em 4 passos</h2>
+      <div class="grid-steps">
+        {STEPS.map((s) => (
+          <div class="step">
+            <b>{s.n}</b>
+            <h3>{s.t}</h3>
+            <p>{s.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {SHOW_INSTAGRAM && (
+  <section id="novidades" class="sec sec--alt" data-reveal>
+    <div class="shell">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow">05 — Novidades</div>
+          <h2 class="title">Últimos trabalhos no @fallcar</h2>
+        </div>
+        <a class="link-underline" href={BRAND.instagram} target="_blank" rel="noopener">Siga no Instagram →</a>
+      </div>
+      {hasFeed ? (
+        <div class="grid-ig">
+          {posts.map((p) => (
+            <a class="ig" href={p.permalink} target="_blank" rel="noopener">
+              <div class="ph" data-empty="Post do Instagram">
+                <img src={p.image} alt={truncate(p.caption, 90) || 'Trabalho recente da Fallcar'} loading="lazy" width="600" height="600" onerror="this.remove()" />
+              </div>
+              <div>
+                <p>{truncate(p.caption, 110)}</p>
+                <time datetime={p.date}>{fmtDate(p.date)}</time>
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="ig-fallback">
+          <b>O feed está fora do ar no momento</b>
+          <p>Os trabalhos mais recentes estão no nosso perfil, atualizado quase todo dia.</p>
+          <a class="btn btn--primary btn--sm" href={BRAND.instagram} target="_blank" rel="noopener">Veja no Instagram</a>
+        </div>
+      )}
+    </div>
+  </section>
+  )}
+
+  <section aria-label="Avaliações" class="sec" data-reveal>
+    <div class="shell">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow">{num(5)} — Avaliações</div>
+          <h2 class="title">{RATING.score} no Google, {RATING.count} avaliações</h2>
+        </div>
+        <a class="link-underline" href={BRAND.reviews} target="_blank" rel="noopener" data-track="reviews_click">Veja todas no Google →</a>
+      </div>
+      <div class="grid-reviews">
+        {REVIEWS.map((r) => (
+          <blockquote class="review">
+            <span class="stars" aria-label="5 de 5 estrelas">★★★★★</span>
+            <p>{r.text}</p>
+            <footer><b>{r.name}</b><small>{r.source}</small></footer>
+          </blockquote>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="orcamento" class="sec sec--alt" data-reveal>
+    <div class="shell split">
+      <div>
+        <div class="eyebrow">{num(6)} — Orçamento rápido</div>
+        <h2 class="title" style="margin-bottom:20px">Orçamento de teto solar e tapeçaria pelo WhatsApp</h2>
+        <p style="max-width:420px;font-size:16px;line-height:1.6;color:var(--text-4)">O formulário não envia e-mail: ele monta a mensagem e abre o WhatsApp já preenchido. Você só anexa as fotos e envia.</p>
+      </div>
+      <form class="quote" id="form-orcamento" data-whatsapp={WHATSAPP}>
+        <label>
+          <span>Nome</span>
+          <input type="text" name="nome" required placeholder="Seu nome" autocomplete="name" />
+        </label>
+        <label>
+          <span>WhatsApp</span>
+          <input type="tel" name="fone" required placeholder="(11) 90000-0000" autocomplete="tel" />
+        </label>
+        <label>
+          <span>Marca, modelo e ano</span>
+          <input type="text" name="carro" required placeholder="Ex.: BMW 320i 2019" />
+        </label>
+        <label>
+          <span>Serviço</span>
+          <select name="servico">
+            <option value="Teto solar">Teto solar</option>
+            <option value="Tapeçaria">Tapeçaria / estofamento</option>
+            <option value="Higienização">Higienização e recuperação</option>
+            <option value="Pós-enchente">Carro atingido por enchente</option>
+            <option value="Não sei">Ainda não sei dizer</option>
+          </select>
+        </label>
+        <label>
+          <span>O que está acontecendo</span>
+          <textarea name="desc" rows="3" placeholder="Ex.: o teto solar deixa entrar água quando chove forte"></textarea>
+        </label>
+        <button class="btn btn--primary" type="submit">Abra o WhatsApp com o resumo</button>
+        <p class="fine">Nada é enviado por e-mail. A mensagem abre no seu WhatsApp para você conferir antes de enviar. Veja a <a href="/politica-de-privacidade/" style="text-decoration:underline">política de privacidade</a>.</p>
+      </form>
+    </div>
+  </section>
+
+  <section id="faq" class="sec" data-reveal>
+    <div class="shell split split--faq">
+      <div>
+        <div class="eyebrow">{num(7)} — Dúvidas</div>
+        <h2 class="title">Dúvidas sobre teto solar e tapeçaria</h2>
+      </div>
+      <div class="faq">
+        {FAQS.map((f, i) => (
+          <details open={i === 0}>
+            <summary>{f.q}</summary>
+            <p>{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="unidades" class="sec sec--alt" data-reveal>
+    <div class="shell">
+      <div class="eyebrow">{num(8)} — Unidades</div>
+      <h2 class="title" style="margin-bottom:40px">Oficina em Osasco e Campos Elíseos (São Paulo)</h2>
+      <div class="grid-units">
+        {UNITS.map((u) => (
+          <div class="unit">
+            <div class="map" data-map={u.map} data-map-title={u.mapTitle}></div>
+            <div class="body">
+              <h3>{u.name}</h3>
+              <p>{u.address}</p>
+              <div class="contact">
+                <a href={'tel:' + u.tel} data-track="phone_click">{u.phone}</a>
+                {u.hours && <span>{u.hours}</span>}
+              </div>
+              <div class="actions">
+                <a class="btn btn--ghost btn--sm" href={u.route} target="_blank" rel="noopener" data-track="rota_click" data-unidade={u.schema.city}>Trace a rota</a>
+                <a class="btn btn--primary btn--sm" href={wa(u.waMsg, u.whatsapp)} target="_blank" rel="noopener" data-track="whatsapp_click" data-origem={'unidade-' + u.slug}>WhatsApp</a>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer" data-reveal>
+  <div class="footer-grid">
+    <div class="about">
+      <a class="logo" href="#topo" aria-label="Fallcar — início">
+        <img src="/img/logo-dark.svg" width="1600" height="411" alt="Fallcar Tapeçaria e Teto Solar" onerror="this.remove()" />
+        <span>LOGO</span>
+      </a>
+      <p>Fallcar Tapeçaria e Teto Solar. Conserto de teto solar, tapeçaria automotiva e higienização em Osasco e São Paulo há mais de 30 anos.</p>
+      <address class="addr">Osasco (KM 18): Av. Hildebrando de Lima, 34, Osasco/SP<br />Campos Elíseos: Alameda Nothmann, 1027, São Paulo/SP</address>
+    </div>
+    <div class="footer-cols">
+      <nav aria-label="Rodapé">
+        <a href="#servicos">Serviços</a>
+        <a href="#antes-depois">Antes e Depois</a>
+    <a href="#trabalhos">Trabalhos</a>
+        {SHOW_INSTAGRAM && <a href="#novidades">Novidades</a>}
+        <a href="#unidades">Unidades</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <div class="links">
+        <a href={BRAND.instagram} target="_blank" rel="noopener me" aria-label="Instagram da Fallcar (abre em nova aba)">Instagram</a>
+        <a href={BRAND.facebook} target="_blank" rel="noopener me" aria-label="Facebook da Fallcar (abre em nova aba)">Facebook</a>
+        <a href="tel:+5511947820539" data-track="phone_click">(11) 94782-0539</a>
+        <a href="tel:+551138255333" data-track="phone_click">(11) 3825-5333</a>
+      </div>
+    </div>
+  </div>
+  <div class="legal">
+    <span>{BRAND.legal} · CNPJ {BRAND.cnpj}</span>
+    <span>© {new Date().getFullYear()} Fallcar. Todos os direitos reservados. · <a href="/politica-de-privacidade/">Política de privacidade</a></span>
+  </div>
+</footer>
+
+<a class="fab" href={wa('Olá, Fallcar! Vim pelo site e quero um orçamento.')} target="_blank" rel="noopener" aria-label="Fale no WhatsApp" data-track="whatsapp_click" data-origem="botao-flutuante">
+  <svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" focusable="false" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</a>
+
+<script src="../scripts/site.js"></script>
+</body>
+</html>

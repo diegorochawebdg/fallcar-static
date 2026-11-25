@@ -1,0 +1,83 @@
+---
+import '../styles/global.css';
+import { BRAND, UNITS, WHATSAPP } from '../data/site.js';
+
+const SITE = 'https://fallcar.com.br';
+const title = 'Política de Privacidade | Fallcar Tapeçaria e Teto Solar';
+const description = 'Como a Fallcar trata os dados pessoais de quem visita o site e pede orçamento pelo WhatsApp, conforme a LGPD.';
+const updated = '14 de novembro de 2026';
+---
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#070a11" />
+  <link rel="canonical" href={SITE + '/politica-de-privacidade/'} />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    .legal-page{max-width:780px;margin:0 auto;padding:56px 24px 96px}
+    .legal-page h1{font-size:56px;line-height:.95;margin:0 0 12px}
+    .legal-page h2{font-family:var(--display);font-weight:400;font-size:30px;margin:40px 0 12px;color:#fff}
+    .legal-page p,.legal-page li{font-size:16px;line-height:1.7;color:var(--text-4)}
+    .legal-page ul{padding-left:20px}
+    .legal-page .meta{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2)}
+    .legal-page a{color:#fff;border-bottom:1px solid var(--red)}
+    .back{display:inline-block;margin-bottom:28px;font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+  </style>
+</head>
+<body>
+<main class="legal-page">
+  <a class="back" href="/">← Voltar ao site</a>
+  <h1>Política de Privacidade</h1>
+  <p class="meta">Última atualização: {updated}</p>
+
+  <p>Esta política explica como a {BRAND.legal} ("Fallcar") trata os dados pessoais de quem visita este site e pede orçamento, em linha com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018, a LGPD).</p>
+
+  <h2>Quem é o controlador</h2>
+  <p>{BRAND.legal}, CNPJ {BRAND.cnpj}, com unidades em {UNITS.map((u) => u.address).join(' e ')}.</p>
+
+  <h2>Quais dados coletamos</h2>
+  <p>O site não tem login nem cadastro e não guarda os dados digitados em nossos servidores. Os dados abaixo só existem se você decidir usar o formulário de orçamento ou falar conosco:</p>
+  <ul>
+    <li><b>Formulário de orçamento:</b> nome, telefone de WhatsApp, marca/modelo/ano do veículo, serviço desejado e a descrição do que está acontecendo. Essas informações são usadas apenas para montar uma mensagem que abre no seu WhatsApp, para você conferir e enviar. Nada é enviado por e-mail nem armazenado pelo site.</li>
+    <li><b>Conversa no WhatsApp:</b> ao nos enviar a mensagem, passamos a ter seu número, seu nome de perfil e o que você compartilhar (como fotos do veículo). O WhatsApp é um serviço da Meta e segue os termos e a política de privacidade dela.</li>
+    <li><b>Dados de navegação:</b> informações técnicas como páginas visitadas, dispositivo, navegador e cliques em botões (por exemplo, "WhatsApp" e "Ligue agora"), coletadas por cookies e ferramentas de medição.</li>
+  </ul>
+
+  <h2>Para que usamos os dados</h2>
+  <ul>
+    <li>Responder seu pedido, fazer o orçamento e agendar o serviço (execução de procedimentos preliminares a contrato, a seu pedido).</li>
+    <li>Entender quais partes do site funcionam e melhorar a experiência (legítimo interesse).</li>
+    <li>Cumprir obrigações legais e regulatórias, quando aplicável.</li>
+  </ul>
+
+  <h2>Cookies e ferramentas de terceiros</h2>
+  <p>Usamos o Google Tag Manager para medir o uso do site. Ele pode registrar cookies e eventos de navegação. Os mapas das unidades são do Google Maps e só carregam quando você chega a essa parte da página; ao carregar, o Google pode registrar seus próprios cookies. Você pode bloquear ou apagar cookies nas configurações do seu navegador. Bloquear cookies não impede o uso do site.</p>
+
+  <h2>Com quem compartilhamos</h2>
+  <p>Não vendemos seus dados. Eles podem ser tratados por fornecedores que nos permitem operar: Meta (WhatsApp), Google (Tag Manager, Analytics e Maps) e o serviço de hospedagem do site (GitHub Pages). Também podemos compartilhar dados quando a lei exigir.</p>
+
+  <h2>Por quanto tempo guardamos</h2>
+  <p>Mantemos as conversas e dados de orçamento pelo tempo necessário para atender você e cumprir obrigações legais. Depois disso, eles são apagados ou anonimizados. Dados de navegação seguem os prazos das ferramentas de medição.</p>
+
+  <h2>Seus direitos</h2>
+  <p>Nos termos do art. 18 da LGPD, você pode pedir a confirmação de que tratamos seus dados, acesso, correção, anonimização, bloqueio ou eliminação de dados desnecessários, portabilidade, informação sobre compartilhamento e a revogação de consentimento. Você também pode reclamar à Autoridade Nacional de Proteção de Dados (ANPD).</p>
+
+  <h2>Como falar conosco sobre seus dados</h2>
+  <p>Envie sua solicitação pelo WhatsApp <a href={'https://wa.me/' + WHATSAPP}>(11) 94782-0539</a> ou por telefone nas unidades. [Incluir aqui o e-mail do responsável pelo atendimento de privacidade, quando definido.]</p>
+
+  <h2>Alterações nesta política</h2>
+  <p>Podemos atualizar este texto para refletir mudanças no site ou na lei. A data da última atualização fica sempre no topo desta página.</p>
+</main>
+</body>
+</html>

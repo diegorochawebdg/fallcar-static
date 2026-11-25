@@ -1,0 +1,15 @@
+{
+  "name": "fallcar-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "npm run feed && astro build",
+    "preview": "astro preview",
+    "feed": "node scripts/fetch-instagram.mjs"
+  },
+  "devDependencies": {
+    "astro": "^4.16.0"
+  }
+}
